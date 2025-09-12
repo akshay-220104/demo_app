@@ -1,12 +1,11 @@
 <div class="container">
-  <h2>Items demo</h2>
+  <h2>Items List</h2>
+  <button type="button" (click)="loadItems()">Load Items</button>
 
-  <button type="button" (click)="loadItems()">Get data</button>
-
-  <div class="results" *ngIf="items$ | async as items; else noData">
-    <p *ngIf="items.length === 0">No items found.</p>
+  <div class="results" *ngIf="items$ | async as response; else noData">
+    <p *ngIf="response.items.length === 0">No items found.</p>
     
-    <div *ngIf="items.length > 0">
+    <div *ngIf="response.items.length > 0">
       <table>
         <thead>
           <tr>
@@ -16,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of getCurrentPageItems(items)">
+          <tr *ngFor="let item of response.items">
             <td>{{item.id}}</td>
             <td>{{item.name}}</td>
             <td>{{item.description}}</td>
@@ -25,14 +24,21 @@
       </table>
 
       <div class="pagination">
-        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <span>Page {{currentPage}} of {{getTotalPages(items)}}</span>
-        <button [disabled]="currentPage === getTotalPages(items)" (click)="nextPage(items)">Next</button>
+        <button [disabled]="currentPage === 1" (click)="previousPage()">
+          Previous
+        </button>
+        <span>
+          Page {{currentPage}} of {{getTotalPages(response.total)}}
+        </span>
+        <button [disabled]="currentPage >= getTotalPages(response.total)" 
+                (click)="nextPage()">
+          Next
+        </button>
       </div>
     </div>
   </div>
 
   <ng-template #noData>
-    <p>No data loaded. Click <em>Get data</em>.</p>
+    <p>No data loaded. Click <em>Load Items</em> to start.</p>
   </ng-template>
 </div>

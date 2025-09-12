@@ -9,21 +9,28 @@ export interface Item {
   description?: string;
 }
 
+export interface PaginatedResponse {
+  items: Item[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
-  private fetchTrigger$ = new Subject<void>();
-  public items$: Observable<Item[]>;
+  private fetchTrigger$ = new Subject<{ page: number; pageSize: number }>();
+  public items$: Observable<PaginatedResponse>;
 
   constructor(private http: HttpClient) {
     this.items$ = this.fetchTrigger$.pipe(
-      switchMap(() => this.http.get<Item[]>(`http://localhost:3000/api/items`)),
+      switchMap(({page, pageSize}) => this.http.get<PaginatedResponse>(`http://localhost:3000/api/items?page=${page}&&pageSize=${pageSize}`)),
       shareReplay(1)
     );
   }
 
-  triggerFetch() {
-    this.fetchTrigger$.next();
+  triggerFetch(page: number, pageSize: number) {
+    this.fetchTrigger$.next({page, pageSize});
   }
 }

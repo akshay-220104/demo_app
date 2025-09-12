@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Item, ItemsService } from '../services/items.service';
+import { Item, ItemsService, PaginatedResponse } from '../services/items.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,32 +11,32 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class ItemsComponent {
-  items$: Observable<Item[]>;
+  items$: Observable<PaginatedResponse>;
   currentPage = 1;
-  itemsPerPage = 4;
+  pageSize = 4;
 
   constructor(private itemsService: ItemsService) {
     this.items$ = this.itemsService.items$;
+    this.loadItems();
   }
 
-  loadItems() {
-    this.itemsService.triggerFetch();
+  loadItems(): void {
+    this.itemsService.triggerFetch( this.currentPage, this.pageSize);
   }
-  getCurrentPageItems(items: Item[]): Item[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return items.slice(startIndex, startIndex + this.itemsPerPage);
+
+  nextPage(): void {
+    this.currentPage++;
+    this.loadItems();
   }
-  getTotalPages(items: Item[]): number {
-    return Math.ceil(items.length / this.itemsPerPage);
-  }
-  nextPage(items: Item[]) {
-    if (this.currentPage < this.getTotalPages(items)) {
-      this.currentPage++;
-    }
-  }
-  previousPage() {
+
+  previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.loadItems();
     }
+  }
+
+  getTotalPages(total: number): number {
+    return Math.ceil(total / this.pageSize);
   }
 }
