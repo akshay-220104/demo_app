@@ -5,11 +5,31 @@
 
   <div class="results" *ngIf="items$ | async as items; else noData">
     <p *ngIf="items.length === 0">No items found.</p>
-    <ul *ngIf="items.length > 0">
-      <li *ngFor="let item of items">
-        <strong>{{ item.name }}</strong> — {{ item.description }}
-      </li>
-    </ul>
+    
+    <div *ngIf="items.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of getCurrentPageItems(items)">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.description}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
+        <span>Page {{currentPage}} of {{getTotalPages(items)}}</span>
+        <button [disabled]="currentPage === getTotalPages(items)" (click)="nextPage(items)">Next</button>
+      </div>
+    </div>
   </div>
 
   <ng-template #noData>
