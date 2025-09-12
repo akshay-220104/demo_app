@@ -1,0 +1,18 @@
+<div class="container">
+  <h2>Items demo</h2>
+
+  <button type="button" (click)="loadItems()">Get data</button>
+
+  <div class="results" *ngIf="items$ | async as items; else noData">
+    <p *ngIf="items.length === 0">No items found.</p>
+    <ul *ngIf="items.length > 0">
+      <li *ngFor="let item of items">
+        <strong>{{ item.name }}</strong> — {{ item.description }}
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noData>
+    <p>No data loaded. Click <em>Get data</em>.</p>
+  </ng-template>
+</div>
