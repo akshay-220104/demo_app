@@ -21,6 +21,14 @@ tr:hover {
   background-color: #f9f9f9;
 }
 
+filter {
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
 .pagination {
   display: flex;
   justify-content: center;

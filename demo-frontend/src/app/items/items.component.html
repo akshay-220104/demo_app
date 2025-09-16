@@ -1,7 +1,15 @@
 <div class="container">
   <h2>Items List</h2>
-  <button type="button" (click)="loadItems()">Load Items</button>
+  <!-- <button type="button" (click)="loadItems()">Load Items</button> -->
+  <button type="button" (click)="showAddForm()">Add Items</button>
 
+  <app-item-form 
+  [showForm]="showForm"
+  (formClosed)="showForm = false"
+  [editItemData]="editItemData"
+  ></app-item-form>
+  
+  <div class="div" *ngIf="showForm === false">
   <div class="results" *ngIf="items$ | async as response; else noData">
     <p *ngIf="response.items.length === 0">No items found.</p>
     
@@ -9,16 +17,30 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <!-- <th>ID</th> -->
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('name','DESC')"></button>
+              Name
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('name','ASC')"></button>
+            </th>
             <th>Description</th>
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('createdat','DESC')"></button>
+              Date
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('createdat','ASC')"></button>
+            </th>
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of response.items">
-            <td>{{item.id}}</td>
+            <!-- <td>{{item.id}}</td> -->
             <td>{{item.name}}</td>
             <td>{{item.description}}</td>
+            <td>{{item.createdat | date:'mediumDate'}}</td>
+            <td><button (click)="editItem(item)">Edit</button></td>
+            <td><button (click)="deleteItem(item.id)">Delete</button></td>
           </tr>
         </tbody>
       </table>
@@ -37,8 +59,12 @@
       </div>
     </div>
   </div>
+  </div>
 
   <ng-template #noData>
     <p>No data loaded. Click <em>Load Items</em> to start.</p>
   </ng-template>
 </div>
+<script>
+  console.log(item);
+</script>
