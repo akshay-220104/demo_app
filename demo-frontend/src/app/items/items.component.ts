@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Item, ItemsService } from '../services/items.service';
 import { CommonModule } from '@angular/common';
 
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class ItemsComponent {
   items$: Observable<Item[]>;
   currentPage = 1;
-  itemsPerPage = 4;
+  itemsPerPage = 10;
 
   constructor(private itemsService: ItemsService) {
     this.items$ = this.itemsService.items$;
@@ -39,4 +39,17 @@ export class ItemsComponent {
       this.currentPage--;
     }
   }
+
+  toggleFilter(column: keyof Item, direction: 'ASC' | 'DESC') {
+    const modifier = direction === 'ASC' ? 1 : -1;
+
+    this.items$ = this.items$.pipe(
+      map(items => [...items].sort((a, b) => {
+        if (a[column]! < b[column]!) return -1 * modifier;
+        if (a[column]! > b[column]!) return 1 * modifier;
+        return 0;
+      }))
+    );
+  }
+
 }

@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, shareReplay } from 'rxjs/operators';
 
 export interface Item {
   id: number;
   name: string;
   description?: string;
+  createdat?: string;
+  sizekb: string;
+  tags: string;
+  visibility: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
-  private fetchTrigger$ = new Subject<void>();
+  private fetchTrigger$ = new BehaviorSubject<void>(undefined);
   public items$: Observable<Item[]>;
 
   constructor(private http: HttpClient) {

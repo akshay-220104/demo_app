@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Items demo</h2>
 
-  <button type="button" (click)="loadItems()">Get data</button>
+  <!-- <button type="button" (click)="loadItems()">Get data</button> -->
 
   <div class="results" *ngIf="items$ | async as items; else noData">
     <p *ngIf="items.length === 0">No items found.</p>
@@ -10,16 +10,43 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('name','DESC')"></button>
+              Name
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('name','ASC')"></button>
+            </th>
+            <th>File Type</th>
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('createdat','DESC')"></button>
+              Date
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('createdat','ASC')"></button>
+            </th>
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('sizekb','DESC')"></button>
+              Size(KB)
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('sizekb','ASC')"></button>
+            </th>
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('tags','DESC')"></button>
+              Tags
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('tags','ASC')"></button>
+            </th>
+            <th>
+              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('visibility','DESC')"></button>
+              Visibility
+              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('visibility','ASC')"></button>
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of getCurrentPageItems(items)">
-            <td>{{item.id}}</td>
+            <!-- <td>{{item.id}}</td> -->
             <td>{{item.name}}</td>
             <td>{{item.description}}</td>
+            <td>{{item.createdat | date:'mediumDate'}}</td>
+            <td>{{item.sizekb}}</td>
+            <td>{{item.tags}}</td>
+            <td>{{item.visibility}}</td>
           </tr>
         </tbody>
       </table>
