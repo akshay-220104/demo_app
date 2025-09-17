@@ -2,18 +2,20 @@ import { Component } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Item, ItemsService } from '../services/items.service';
 import { CommonModule } from '@angular/common';
+import { ItemFormComponent } from '../item-form/item-form.component';
 
 @Component({
   selector: 'app-items',
   standalone: true,
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, ItemFormComponent],
 })
 export class ItemsComponent {
   items$: Observable<Item[]>;
   currentPage = 1;
   itemsPerPage = 10;
+  showForm = false;
 
   constructor(private itemsService: ItemsService) {
     this.items$ = this.itemsService.items$;
@@ -44,12 +46,54 @@ export class ItemsComponent {
     const modifier = direction === 'ASC' ? 1 : -1;
 
     this.items$ = this.items$.pipe(
-      map(items => [...items].sort((a, b) => {
-        if (a[column]! < b[column]!) return -1 * modifier;
-        if (a[column]! > b[column]!) return 1 * modifier;
-        return 0;
-      }))
+      map((items) =>
+        [...items].sort((a, b) => {
+          if (a[column]! < b[column]!) return -1 * modifier;
+          if (a[column]! > b[column]!) return 1 * modifier;
+          return 0;
+        })
+      )
     );
   }
+
+  deleteItem(id: number) {
+    const confirmation = confirm('Are you sure you want to delete this item?');
+    if (confirmation) {
+      this.itemsService.deleteItem(id).subscribe(() => {
+        this.loadItems();
+      });
+    }
+  }
+
+
+selectedItem?: Item;
+
+createItem() {
+  this.selectedItem = undefined;
+  this.showForm = true;
+}
+
+editItem(item: Item) {
+  this.selectedItem = item;
+  this.showForm = true;
+}
+
+handleSubmit(item: Item) {
+  if ('id' in item) {
+    this.itemsService.updateItem(item.id, item).subscribe(() => {
+      this.showForm = false;
+      this.loadItems();
+    });
+  } else {
+    this.itemsService.createItem(item).subscribe(() => {
+      this.showForm = false;
+      this.loadItems();
+    });
+  }
+}
+
+handleCancel() {
+  this.showForm = false;
+}
 
 }

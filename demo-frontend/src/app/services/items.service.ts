@@ -3,6 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, shareReplay } from 'rxjs/operators';
 
+// export interface NewItem {
+//   name: string;
+//   description?: string;
+//   createdat?: string;
+//   sizekb: string;
+//   tags: string;
+//   visibility: string;
+// }
+
 export interface Item {
   id: number;
   name: string;
@@ -29,5 +38,14 @@ export class ItemsService {
 
   triggerFetch() {
     this.fetchTrigger$.next();
+  }
+  deleteItem(id: number): Observable<void> {
+    return this.http.delete<void>(`http://localhost:3000/api/items/${id}`);
+  }
+  createItem(item: Item): Observable<Item> {
+    return this.http.post<Item>(`http://localhost:3000/api/items`, item);
+  }
+  updateItem(id: number, item: Partial<Item>): Observable<Item> {
+    return this.http.put<Item>(`http://localhost:3000/api/items/${id}`, item);
   }
 }

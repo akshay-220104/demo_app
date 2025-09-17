@@ -2,6 +2,7 @@
   <h2>Items demo</h2>
 
   <!-- <button type="button" (click)="loadItems()">Get data</button> -->
+  <button type="button" class="button primary" (click)="createItem()">Create Item</button>
 
   <div class="results" *ngIf="items$ | async as items; else noData">
     <p *ngIf="items.length === 0">No items found.</p>
@@ -36,9 +37,49 @@
               Visibility
               <button class="bi-sort-alpha-down filter" (click)="toggleFilter('visibility','ASC')"></button>
             </th>
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
+          
+          <tr class="filter-row">
+  <td>
+    <div class="search-input">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search by name"  />
+    </div>
+  </td>
+  <td>
+    <div class="search-input">
+      <i class="bibi bi-file-earmark"></i>
+      <input type="text" placeholder="Search by file type"/>
+    </div>
+  </td>
+  <td></td>
+  <td>
+    <div class="search-input">
+      <i class="bi bi-hdd"></i>
+      <input type="text" placeholder="Search by size"  />
+    </div>
+  </td>
+  <td>
+    <div class="search-input">
+      <i class="bi bi-tags"></i>
+      <input type="text" placeholder="Search by tags" />
+    </div>
+  </td>
+  <td>
+    <div class="search-input">
+      <i class="bi bi-eye"></i>
+      <input type="text" placeholder="Search by visibility"  />
+    </div>
+  </td>
+  <td colspan="2">
+    <button class="clear-filters" >Clear Filters</button>
+  </td>
+</tr>
+
           <tr *ngFor="let item of getCurrentPageItems(items)">
             <!-- <td>{{item.id}}</td> -->
             <td>{{item.name}}</td>
@@ -47,6 +88,8 @@
             <td>{{item.sizekb}}</td>
             <td>{{item.tags}}</td>
             <td>{{item.visibility}}</td>
+            <td><button class="danger button" (click)="deleteItem(item.id)">Delete</button></td>
+            <td><button class="safe button" (click)="editItem(item)">Edit</button></td>
           </tr>
         </tbody>
       </table>
@@ -63,3 +106,14 @@
     <p>No data loaded. Click <em>Get data</em>.</p>
   </ng-template>
 </div>
+<!-- <app-item-form
+  *ngIf="showForm"
+  (submitItem)="handleSubmit($event)"
+  (cancel)="handleCancel()">
+</app-item-form> -->
+<app-item-form
+  *ngIf="showForm"
+  [itemData]="selectedItem"
+  (submitItem)="handleSubmit($event)"
+  (cancel)="handleCancel()">
+</app-item-form>
