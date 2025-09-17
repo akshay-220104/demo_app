@@ -2,102 +2,157 @@
   <h2>Items demo</h2>
 
   <!-- <button type="button" (click)="loadItems()">Get data</button> -->
-  <button type="button" class="button primary" (click)="createItem()">Create Item</button>
+  <button type="button" class="button primary" (click)="createItem()">
+    Create Item
+  </button>
 
   <div class="results" *ngIf="items$ | async as items; else noData">
     <p *ngIf="items.length === 0">No items found.</p>
-    
+
     <div *ngIf="items.length > 0">
       <table>
         <thead>
           <tr>
             <th>
-              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('name','DESC')"></button>
+              <button
+                class="bi-sort-alpha-up filter"
+                (click)="toggleFilter('name', 'DESC')"
+              ></button>
               Name
-              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('name','ASC')"></button>
+              <button
+                class="bi-sort-alpha-down filter"
+                (click)="toggleFilter('name', 'ASC')"
+              ></button>
             </th>
             <th>File Type</th>
             <th>
-              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('createdat','DESC')"></button>
+              <button
+                class="bi-sort-alpha-up filter"
+                (click)="toggleFilter('createdat', 'DESC')"
+              ></button>
               Date
-              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('createdat','ASC')"></button>
+              <button
+                class="bi-sort-alpha-down filter"
+                (click)="toggleFilter('createdat', 'ASC')"
+              ></button>
             </th>
             <th>
-              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('sizekb','DESC')"></button>
+              <button
+                class="bi-sort-alpha-up filter"
+                (click)="toggleFilter('sizekb', 'DESC')"
+              ></button>
               Size(KB)
-              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('sizekb','ASC')"></button>
+              <button
+                class="bi-sort-alpha-down filter"
+                (click)="toggleFilter('sizekb', 'ASC')"
+              ></button>
             </th>
             <th>
-              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('tags','DESC')"></button>
+              <button
+                class="bi-sort-alpha-up filter"
+                (click)="toggleFilter('tags', 'DESC')"
+              ></button>
               Tags
-              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('tags','ASC')"></button>
+              <button
+                class="bi-sort-alpha-down filter"
+                (click)="toggleFilter('tags', 'ASC')"
+              ></button>
             </th>
             <th>
-              <button class="bi-sort-alpha-up filter" (click)="toggleFilter('visibility','DESC')"></button>
+              <button
+                class="bi-sort-alpha-up filter"
+                (click)="toggleFilter('visibility', 'DESC')"
+              ></button>
               Visibility
-              <button class="bi-sort-alpha-down filter" (click)="toggleFilter('visibility','ASC')"></button>
+              <button
+                class="bi-sort-alpha-down filter"
+                (click)="toggleFilter('visibility', 'ASC')"
+              ></button>
             </th>
-            <th> </th>
-            <th> </th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          
+
           <tr class="filter-row">
   <td>
     <div class="search-input">
       <i class="bi bi-search"></i>
-      <input type="text" placeholder="Search by name"  />
+      <input type="text" 
+             placeholder="Search name" 
+             [(ngModel)]="searchName" />
     </div>
   </td>
   <td>
     <div class="search-input">
-      <i class="bibi bi-file-earmark"></i>
-      <input type="text" placeholder="Search by file type"/>
+      <i class="bi bi-file-earmark"></i>
+      <input type="text" 
+             placeholder="Search type"
+             [(ngModel)]="searchFileType" />
     </div>
   </td>
   <td></td>
   <td>
     <div class="search-input">
       <i class="bi bi-hdd"></i>
-      <input type="text" placeholder="Search by size"  />
+      <input type="text" 
+             placeholder="Search size"
+             [(ngModel)]="searchSize" />
     </div>
   </td>
   <td>
     <div class="search-input">
       <i class="bi bi-tags"></i>
-      <input type="text" placeholder="Search by tags" />
+      <input type="text" 
+             placeholder="Search tags"
+             [(ngModel)]="searchTags" />
     </div>
   </td>
   <td>
     <div class="search-input">
       <i class="bi bi-eye"></i>
-      <input type="text" placeholder="Search by visibility"  />
+      <input type="text" 
+             placeholder="Search visibility"
+             [(ngModel)]="searchVisibility" />
     </div>
   </td>
   <td colspan="2">
-    <button class="clear-filters" >Clear Filters</button>
+    <button class="clear-filters" (click)="clearFilters()">Clear</button>
   </td>
 </tr>
 
           <tr *ngFor="let item of getCurrentPageItems(items)">
             <!-- <td>{{item.id}}</td> -->
-            <td>{{item.name}}</td>
-            <td>{{item.description}}</td>
-            <td>{{item.createdat | date:'mediumDate'}}</td>
-            <td>{{item.sizekb}}</td>
-            <td>{{item.tags}}</td>
-            <td>{{item.visibility}}</td>
-            <td><button class="danger button" (click)="deleteItem(item.id)">Delete</button></td>
-            <td><button class="safe button" (click)="editItem(item)">Edit</button></td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.createdat | date : "mediumDate" }}</td>
+            <td>{{ item.sizekb }}</td>
+            <td>{{ item.tags }}</td>
+            <td>{{ item.visibility }}</td>
+            <td>
+              <button class="danger button" (click)="deleteItem(item.id)">
+                Delete
+              </button>
+            </td>
+            <td>
+              <button class="safe button" (click)="editItem(item)">Edit</button>
+            </td>
           </tr>
         </tbody>
       </table>
 
       <div class="pagination">
-        <button [disabled]="currentPage === 1" (click)="previousPage()">Previous</button>
-        <span>Page {{currentPage}} of {{getTotalPages(items)}}</span>
-        <button [disabled]="currentPage === getTotalPages(items)" (click)="nextPage(items)">Next</button>
+        <button [disabled]="currentPage === 1" (click)="previousPage()">
+          Previous
+        </button>
+        <span>Page {{ currentPage }} of {{ getTotalPages(items) }}</span>
+        <button
+          [disabled]="currentPage === getTotalPages(items)"
+          (click)="nextPage(items)"
+        >
+          Next
+        </button>
       </div>
     </div>
   </div>
@@ -115,5 +170,6 @@
   *ngIf="showForm"
   [itemData]="selectedItem"
   (submitItem)="handleSubmit($event)"
-  (cancel)="handleCancel()">
+  (cancel)="handleCancel()"
+>
 </app-item-form>

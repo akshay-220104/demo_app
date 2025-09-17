@@ -3,19 +3,26 @@ import { map, Observable } from 'rxjs';
 import { Item, ItemsService } from '../services/items.service';
 import { CommonModule } from '@angular/common';
 import { ItemFormComponent } from '../item-form/item-form.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-items',
   standalone: true,
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.css'],
-  imports: [CommonModule, ItemFormComponent],
+  imports: [CommonModule, ItemFormComponent, FormsModule],
 })
 export class ItemsComponent {
   items$: Observable<Item[]>;
   currentPage = 1;
   itemsPerPage = 10;
   showForm = false;
+
+  searchName: string = '';
+  searchFileType: string = '';
+  searchSize: string = '';
+  searchTags: string = '';
+  searchVisibility: string = '';
 
   constructor(private itemsService: ItemsService) {
     this.items$ = this.itemsService.items$;
@@ -24,10 +31,29 @@ export class ItemsComponent {
   loadItems() {
     this.itemsService.triggerFetch();
   }
-  getCurrentPageItems(items: Item[]): Item[] {
+
+  getCurrentPageItems(items: any[]): any[] {
+
+    let filteredItems = items.filter(item => {
+      return item.name.toLowerCase().includes(this.searchName.toLowerCase()) &&
+             item.description.toLowerCase().includes(this.searchFileType.toLowerCase()) &&
+             item.sizekb.toString().includes(this.searchSize) &&
+             item.tags.toLowerCase().includes(this.searchTags.toLowerCase()) &&
+             item.visibility.toLowerCase().includes(this.searchVisibility.toLowerCase());
+    });
+
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return items.slice(startIndex, startIndex + this.itemsPerPage);
+    return filteredItems.slice(startIndex, startIndex + this.itemsPerPage);
   }
+
+  clearFilters(): void {
+    this.searchName = '';
+    this.searchFileType = '';
+    this.searchSize = '';
+    this.searchTags = '';
+    this.searchVisibility = '';
+  }
+
   getTotalPages(items: Item[]): number {
     return Math.ceil(items.length / this.itemsPerPage);
   }
