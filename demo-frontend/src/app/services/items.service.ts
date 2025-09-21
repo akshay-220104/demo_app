@@ -3,15 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, shareReplay } from 'rxjs/operators';
 
-// export interface NewItem {
-//   name: string;
-//   description?: string;
-//   createdat?: string;
-//   sizekb: string;
-//   tags: string;
-//   visibility: string;
-// }
-
 export interface Item {
   id: number;
   name: string;

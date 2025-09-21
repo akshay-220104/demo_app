@@ -46,6 +46,11 @@ export class ItemsComponent {
     return filteredItems.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
+  applyfilter(){
+    this.currentPage = 1;
+    this.loadItems();
+  }
+
   clearFilters(): void {
     this.searchName = '';
     this.searchFileType = '';
